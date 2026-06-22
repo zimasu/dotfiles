@@ -133,3 +133,13 @@ hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_
 hl.bind("XF86AudioMute",        hl.dsp.exec_cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle"))
 hl.bind(mod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
+
+-- Disable default annoying splash/logo text overlays
+
+-- Disable default annoying splash/logo text overlays cleanly via function call
+hl.config({
+    misc = {
+        disable_hyprland_logo = true,
+        disable_splash_rendering = true
+    }
+})

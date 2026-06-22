@@ -1,0 +1,163 @@
+import Quickshell
+import Quickshell.Wayland
+import QtQuick
+import QtQuick.Shapes
+
+PanelWindow {
+    id: borderWindow
+
+    screen: Quickshell.screens.find(s => s.name === "DP-1")
+
+    anchors {
+        top: true
+        bottom: true
+        left: true
+        right: true
+    }
+
+    color: "transparent"
+    exclusiveZone: 0
+    WlrLayershell.layer: WlrLayer.Overlay
+    mask: Region {}
+
+    readonly property color borderColor: "#e8943a"
+    readonly property int topThickness: 20
+    readonly property int sideThickness: 8
+    readonly property int bottomThickness: 8
+    readonly property int radTL: Math.min(topThickness, sideThickness)
+    readonly property int radTR: Math.min(topThickness, sideThickness)
+    readonly property int radBL: Math.min(bottomThickness, sideThickness)
+    readonly property int radBR: Math.min(bottomThickness, sideThickness)
+
+    Rectangle {
+        color: borderWindow.borderColor
+        anchors { top: parent.top; left: parent.left; right: parent.right }
+        height: borderWindow.topThickness
+    }
+
+    Rectangle {
+        color: borderWindow.borderColor
+        anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
+        height: borderWindow.bottomThickness
+    }
+
+    Rectangle {
+        color: borderWindow.borderColor
+        anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
+        width: borderWindow.sideThickness
+    }
+
+    Rectangle {
+        color: borderWindow.borderColor
+        anchors { top: parent.top; bottom: parent.bottom; right: parent.right }
+        width: borderWindow.sideThickness
+    }
+
+    Shape {
+        x: 0
+        y: 0
+        width: borderWindow.sideThickness
+        height: borderWindow.topThickness
+        layer.enabled: true
+        layer.samples: 4
+
+        ShapePath {
+            strokeWidth: -1
+            fillColor: borderWindow.borderColor
+
+            startX: 0; startY: 0
+            PathLine { x: borderWindow.sideThickness; y: 0 }
+            PathLine { x: borderWindow.sideThickness; y: borderWindow.topThickness - borderWindow.radTL }
+            PathArc {
+                x: borderWindow.sideThickness - borderWindow.radTL
+                y: borderWindow.topThickness
+                radiusX: borderWindow.radTL
+                radiusY: borderWindow.radTL
+                direction: PathArc.Counterclockwise
+            }
+            PathLine { x: 0; y: borderWindow.topThickness }
+            PathLine { x: 0; y: 0 }
+        }
+    }
+
+    Shape {
+        x: parent.width - borderWindow.sideThickness
+        y: 0
+        width: borderWindow.sideThickness
+        height: borderWindow.topThickness
+        layer.enabled: true
+        layer.samples: 4
+
+        ShapePath {
+            strokeWidth: -1
+            fillColor: borderWindow.borderColor
+
+            startX: borderWindow.sideThickness; startY: 0
+            PathLine { x: 0; y: 0 }
+            PathLine { x: 0; y: borderWindow.topThickness - borderWindow.radTR }
+            PathArc {
+                x: borderWindow.radTR
+                y: borderWindow.topThickness
+                radiusX: borderWindow.radTR
+                radiusY: borderWindow.radTR
+                direction: PathArc.Clockwise
+            }
+            PathLine { x: borderWindow.sideThickness; y: borderWindow.topThickness }
+            PathLine { x: borderWindow.sideThickness; y: 0 }
+        }
+    }
+
+    Shape {
+        x: 0
+        y: parent.height - borderWindow.bottomThickness
+        width: borderWindow.sideThickness
+        height: borderWindow.bottomThickness
+        layer.enabled: true
+        layer.samples: 4
+
+        ShapePath {
+            strokeWidth: -1
+            fillColor: borderWindow.borderColor
+
+            startX: 0; startY: borderWindow.bottomThickness
+            PathLine { x: borderWindow.sideThickness; y: borderWindow.bottomThickness }
+            PathLine { x: borderWindow.sideThickness; y: borderWindow.radBL }
+            PathArc {
+                x: borderWindow.sideThickness - borderWindow.radBL
+                y: 0
+                radiusX: borderWindow.radBL
+                radiusY: borderWindow.radBL
+                direction: PathArc.Clockwise
+            }
+            PathLine { x: 0; y: 0 }
+            PathLine { x: 0; y: borderWindow.bottomThickness }
+        }
+    }
+
+    Shape {
+        x: parent.width - borderWindow.sideThickness
+        y: parent.height - borderWindow.bottomThickness
+        width: borderWindow.sideThickness
+        height: borderWindow.bottomThickness
+        layer.enabled: true
+        layer.samples: 4
+
+        ShapePath {
+            strokeWidth: -1
+            fillColor: borderWindow.borderColor
+
+            startX: borderWindow.sideThickness; startY: borderWindow.bottomThickness
+            PathLine { x: 0; y: borderWindow.bottomThickness }
+            PathLine { x: 0; y: borderWindow.radBR }
+            PathArc {
+                x: borderWindow.radBR
+                y: 0
+                radiusX: borderWindow.radBR
+                radiusY: borderWindow.radBR
+                direction: PathArc.Counterclockwise
+            }
+            PathLine { x: borderWindow.sideThickness; y: 0 }
+            PathLine { x: borderWindow.sideThickness; y: borderWindow.bottomThickness }
+        }
+    }
+}

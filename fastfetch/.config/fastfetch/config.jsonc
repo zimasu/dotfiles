@@ -1,0 +1,17 @@
+{
+  "logo": { 
+    "type": "small", 
+    "source": "arch", 
+    "color": { "1": "white", "2": "white" },
+    "padding": { "top": 2 }
+  },
+  "display": {
+    "color": { "title": "yellow", "keys": "yellow"}
+  },
+  "modules": ["title",
+    "os", "kernel", "cpu",
+    { "type": "gpu", "hideType": "integrated" },
+    { "type": "command", "key": "LLM", "text": "~/.local/bin/ollama-last" },
+    "memory", "physicalMemory", "disk", "shell", "wm", "packages"
+  ]
+}

@@ -1,0 +1,14 @@
+set previewer ~/.config/lf/preview.sh
+set drawbox true
+set icons true
+set ignorecase true
+
+map <enter> open
+map D delete
+
+cmd open ${{
+    case $(file --mime-type -Lb "$f") in
+        text/*|application/json|application/x-empty) lf -remote "send $id \$$EDITOR \"$f\"";;
+        *) xdg-open "$f" >/dev/null 2>&1 &;;
+    esac
+}}

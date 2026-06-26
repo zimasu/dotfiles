@@ -1,0 +1,10 @@
+#!/bin/bash
+PERSISTENT=~/.local/share/ollama-last
+RUNNING=$(ollama ps | awk 'NR==2{print $1}')
+if [ -n "$RUNNING" ]; then
+    echo "$RUNNING" > /tmp/ollama-last
+    echo "$RUNNING" > "$PERSISTENT"
+    echo "$RUNNING"
+else
+    cat /tmp/ollama-last 2>/dev/null || cat "$PERSISTENT" 2>/dev/null || echo "none"
+fi

@@ -1,0 +1,18 @@
+menu {
+    background-color: #1d2021;
+    border: 2px solid #504945;
+    border-radius: 4px;
+    padding: 4px 0;
+}
+
+menuitem {
+    color: #ebdbb2;
+    padding: 6px 16px;
+    font-family: "JetBrainsMono Nerd Font Mono";
+    font-size: 11px;
+}
+
+menuitem:hover {
+    background-color: #3c3836;
+    color: #fb4934;
+}

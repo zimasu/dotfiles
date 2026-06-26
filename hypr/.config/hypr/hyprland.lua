@@ -95,20 +95,29 @@ hl.config({
     },
 })
 
--- ANIMATIONS — Snappy, polished, optimized for high refresh rates (No workspace bloat)
-hl.curve("snappy", { type = "bezier", points = { {0.16, 1}, {0.3, 1} } })
+-- ANIMATIONS — tuned for 240hz, tight feel, no workspace bloat
+-- Two curves:
+--   "instant" = hard snap, no trail (closes + moves)
+--   "snappy"  = fast ease-out    (opens + fade)
+hl.curve("instant", { type = "bezier", points = { {0.25, 1.0}, {0.25, 1.0} } })
+hl.curve("snappy",  { type = "bezier", points = { {0.22, 1.0}, {0.36, 1.0} } })
 
-hl.animation({ leaf = "global",      enabled = true, speed = 3,   bezier = "snappy" })
-hl.animation({ leaf = "windowsIn",   enabled = true, speed = 1.8, bezier = "snappy", style = "popin 90%" })
-hl.animation({ leaf = "windowsOut",  enabled = true, speed = 1.2, bezier = "snappy", style = "popin 95%" })
-hl.animation({ leaf = "windowsMove", enabled = true, speed = 2,   bezier = "snappy" })
-hl.animation({ leaf = "layers",      enabled = true, speed = 2.2, bezier = "snappy", style = "slide" })
-hl.animation({ leaf = "fade",        enabled = true, speed = 2.5, bezier = "snappy" })
-hl.animation({ leaf = "border",      enabled = true, speed = 3,   bezier = "snappy" })
+hl.animation({ leaf = "global", enabled = true, speed = 1, bezier = "snappy" })
+
+hl.animation({ leaf = "windows",     enabled = true, speed = 1.5, bezier = "snappy",  style = "popin 80%" })
+hl.animation({ leaf = "windowsIn",   enabled = true, speed = 1.4, bezier = "snappy",  style = "popin 80%" })
+hl.animation({ leaf = "windowsOut",  enabled = true, speed = 1.2, bezier = "instant", style = "popin 80%" })
+hl.animation({ leaf = "windowsMove", enabled = true, speed = 1.5, bezier = "instant" })
+
+hl.animation({ leaf = "fade",        enabled = true, speed = 2.0, bezier = "snappy" })
+hl.animation({ leaf = "fadeIn",      enabled = true, speed = 2.0, bezier = "snappy" })
+hl.animation({ leaf = "fadeOut",     enabled = true, speed = 2.5, bezier = "instant" })
+
+hl.animation({ leaf = "workspaces",  enabled = false })
 
 -- AUTOSTART
 hl.on("hyprland.start", function()
-    hl.exec_cmd("qs -c border")
+    hl.exec_cmd("qs")
     hl.exec_cmd("mako")
     hl.exec_cmd("hyprpaper")
     hl.exec_cmd("wl-paste --type text --watch cliphist store")
@@ -119,7 +128,7 @@ end)
 
 -- KEYBINDS
 local mod = "SUPER"
-hl.bind(mod .. " + Return", hl.dsp.exec_cmd("kitty"))
+hl.bind(mod .. " + Return", hl.dsp.exec_cmd("foot"))
 hl.bind(mod .. " + Q",      hl.dsp.window.close())
 hl.bind(mod .. " + M",      hl.dsp.exit())
 hl.bind(mod .. " + D",      hl.dsp.exec_cmd("fuzzel"))
@@ -133,13 +142,3 @@ hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_
 hl.bind("XF86AudioMute",        hl.dsp.exec_cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle"))
 hl.bind(mod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
-
--- Disable default annoying splash/logo text overlays
-
--- Disable default annoying splash/logo text overlays cleanly via function call
-hl.config({
-    misc = {
-        disable_hyprland_logo = true,
-        disable_splash_rendering = true
-    }
-})

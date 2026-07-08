@@ -650,6 +650,11 @@ in
     ./hardware-configuration.nix
     ./dashboard.nix  
 ];
+
+fileSystems."/var/lib/libvirt/images" = {
+  device = "/dev/disk/by-uuid/c5cd2ae4-ece3-4e14-8be1-b194804b3ee8";
+  fsType = "ext4";
+};
   # ── Boot ────────────────────────────────────────────────────────────────────
   boot.loader.systemd-boot.enable = false;
   boot.loader.timeout = -1;              # menu waits forever, no auto-boot

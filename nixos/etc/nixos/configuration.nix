@@ -655,6 +655,20 @@ fileSystems."/var/lib/libvirt/images" = {
   device = "/dev/disk/by-uuid/c5cd2ae4-ece3-4e14-8be1-b194804b3ee8";
   fsType = "ext4";
 };
+
+# ── Virtualization (libvirt/KVM) ──────────────────────────────────────────
+virtualisation.libvirtd = {
+  enable = true;
+  qemu = {
+    package = pkgs.qemu_kvm;
+    runAsRoot = true;
+    swtpm.enable = true;        # virtual TPM support, useful for Windows-guest-style secure boot if ever needed
+  };
+};
+
+# Ensure KVM kernel modules load (AMD-V, matches your 7800X3D)
+virtualisation.libvirtd.onBoot = "ignore";
+virtualisation.libvirtd.onShutdown = "shutdown";
   # ── Boot ────────────────────────────────────────────────────────────────────
   boot.loader.systemd-boot.enable = false;
   boot.loader.timeout = -1;              # menu waits forever, no auto-boot
@@ -810,7 +824,7 @@ if [ ! -L "$HOME/.config/quickshell/shell.qml" ]; then
     isNormalUser = true;
     shell        = pkgs.zsh;
     description  = "n0xtcy";
-    extraGroups  = [ "wheel" "networkmanager" "video" "audio" "docker" ];
+    extraGroups  = [ "wheel" "networkmanager" "video" "audio" "docker" "libvirtd" ];
     packages     = [];
   };
 
@@ -869,6 +883,7 @@ if [ ! -L "$HOME/.config/quickshell/shell.qml" ]; then
 
   # ── Packages ─────────────────────────────────────────────────────────────────
   environment.systemPackages = with pkgs; [
+    virt-manager
 
     # nixman — pacman-style package manager wrapper (preserved exactly)
     (pkgs.writeShellScriptBin "nixman" ''
